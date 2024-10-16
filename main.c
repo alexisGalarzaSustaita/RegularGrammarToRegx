@@ -49,11 +49,16 @@ void appendNode(Node **head, const char *line){
         }
     }
 
-}
-
 
 void freeLinkedList(Node *head){
+    Node *current = head;
+    Node *next;
 
+    while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next; 
+    }
 }
 
 
@@ -72,5 +77,10 @@ Node* createLinkedList(FILE *file){
 
 
 void printList(Node *head){
-    
+    Node *current = head;
+
+    while (current != NULL) {
+        printf("%s\n", current->line);
+        current = current->next;
+    }
 }
