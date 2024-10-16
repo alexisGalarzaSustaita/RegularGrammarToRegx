@@ -1,11 +1,14 @@
 #include "main.h"
 
 int main(){
+
     FILE *grammar = fopen("gramatica1.txt", "r");
+
     if(grammar == NULL){
         perror("Error openning the file");
         return EXIT_FAILURE;
     }
+
     Node *head = createLinkedList(grammar);
 
     fclose(grammar);
@@ -19,6 +22,8 @@ int main(){
     return EXIT_SUCCESS;
 
 }
+
+//FUNCTIONS
 Node *createNode(const char *line){
 
     Node *newNode = (Node *)malloc(sizeof(Node));
@@ -27,6 +32,8 @@ Node *createNode(const char *line){
 
     return (newNode);
 }
+
+
 void appendNode(Node **head, const char *line){
     Node *newNode = createNode(line);
 
@@ -38,9 +45,12 @@ void appendNode(Node **head, const char *line){
     }
 
 }
+
+
 void freeLinkedList(Node *head){
 
 }
+
 
 Node* createLinkedList(FILE *file){
     Node *head = NULL; //Head of the linked list
@@ -54,6 +64,8 @@ Node* createLinkedList(FILE *file){
 
     return (head);
 }
+
+
 void printList(Node *head){
     
 }
