@@ -38,10 +38,15 @@ void appendNode(Node **head, const char *line){
     Node *newNode = createNode(line);
 
     if(*head == NULL){
-        //Empty list
+        *head == newNode; 
     }
     else{
-        //At 
+        Node *current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+        }
     }
 
 }
