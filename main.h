@@ -6,12 +6,13 @@
 
 typedef struct Node
 {
-    char *line;
+    char *ruleIdentifier;
+    char *production
     struct Node *next;
 }Node;
 
-Node* createNode(const char *line);
-void appendNode(Node **head, const char *line);
+Node *createNode(const char *ruleIdentifier, const char *production);
+void appendNode(Node **head, const char *ruleIdentifier, const char *production);
 void freeLinkedList(Node *head);
 Node* createLinkedList(FILE *file);
 void printList(Node *head); 

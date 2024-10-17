@@ -24,18 +24,19 @@ int main(){
 }
 
 //FUNCTIONS
-Node *createNode(const char *line){
+Node* createNode(const char *ruleIdentifier, const char *production){
 
     Node *newNode = (Node *)malloc(sizeof(Node));
-    newNode->line = strdup(line);
+    newNode->ruleIdentifier = strdup(ruleIdentifier);
+    newNode->production = strdup(production); 
     newNode->next = NULL;
 
     return (newNode);
 }
 
 
-void appendNode(Node **head, const char *line){
-    Node *newNode = createNode(line);
+void appendNode(Node **head, const char *ruleIdentifier, const char *production){
+    Node *newNode = createNode(ruleIdentifier,production);
 
     if(*head == NULL){
         *head == newNode; 
