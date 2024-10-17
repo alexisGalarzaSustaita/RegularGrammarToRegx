@@ -24,7 +24,7 @@ int main(){
 }
 
 //FUNCTIONS
-Node* createNode(const char *ruleIdentifier, const char *production){
+Node *createNode(const char *ruleIdentifier, const char *production){
 
     Node *newNode = (Node *)malloc(sizeof(Node));
     newNode->ruleIdentifier = strdup(ruleIdentifier);
