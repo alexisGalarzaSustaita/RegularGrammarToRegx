@@ -74,9 +74,10 @@ Node* createLinkedList(FILE *file){
         line[strcspn(line, "\n")] = '\0';
         
         const char *delimiter = strstr(line, "->"); 
-        if(delimiter != NULL){
+        if (delimiter != NULL){
             strncpy(ruleIdentifier, line, delimiter - line); 
             ruleIdentifier[delimiter - line] = '\0'; 
+            strcpy(production, delimiter + 2); 
         }
 
         appendNode(&head, "", line);
