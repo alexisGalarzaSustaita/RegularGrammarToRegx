@@ -66,11 +66,20 @@ void freeLinkedList(Node *head){
 Node* createLinkedList(FILE *file){
     Node *head = NULL; //Head of the linked list
     char line[MAX_LINE_LENGHT];
+    char ruleIdentifier[MAX_LINE_LENGHT]; 
+    char production[MAX_LINE_LENGHT]; 
 
     while(fgets(line, sizeof(line), file)){
         //remove the newline character if present
         line[strcspn(line, "\n")] = '\0';
-        appendNode(&head, line);
+        
+        const char *delimiter = strstr(line, "->"); 
+        if(delimiter != NULL){
+            strncpy(ruleIdentifier, line, delimiter - line); 
+            ruleIdentifier[delimiter - line] = '\0'; 
+        }
+
+        appendNode(&head, "", line);
     }
 
     return (head);
