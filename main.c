@@ -78,9 +78,8 @@ Node* createLinkedList(FILE *file){
             strncpy(ruleIdentifier, line, delimiter - line); 
             ruleIdentifier[delimiter - line] = '\0'; 
             strcpy(production, delimiter + 2); 
+            appendNode(&head, ruleIdentifier, production);
         }
-
-        appendNode(&head, "", line);
     }
 
     return (head);
