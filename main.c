@@ -97,7 +97,7 @@ void splitLine(const char *line, char *ruleIdentifier, char *production){
 
 
 Node* findNode(Node *head, const char *ruleIdentifier){
-    Node *current = *head;
+    Node *current = head;
     while (current != NULL) {
         if (strcmp(current->ruleIdentifier, ruleIdentifier) == 0) {
             return current; 
