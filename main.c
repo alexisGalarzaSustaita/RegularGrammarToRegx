@@ -69,15 +69,8 @@ Node* createLinkedList(FILE *file) {
     while (fgets(line, sizeof(line), file)) {
         // Remove the newline character if present
         line[strcspn(line, "\n")] = '\0';
-
-        // Find the delimiter '->'
-        const char *delimiter = strstr(line, "->");
-        if (delimiter != NULL) {
-            strncpy(ruleIdentifier, line, delimiter - line);
-            ruleIdentifier[delimiter - line] = '\0';
-            strcpy(production, delimiter + 2);
-            appendNode(&head, ruleIdentifier, production);
-        }
+        splitLine(line, ruleIdentifier, production);
+        appendOrUpdateNode(&head, ruleIdentifier, production);
     }
 
     return head;
@@ -90,5 +83,51 @@ void printList(Node *head) {
     while (current != NULL) {
         printf("Rule: %s -> %s\n", current->ruleIdentifier, current->production);
         current = current->next;
+    }
+}
+
+void splitLine(const char *line, char *ruleIdentifier, char *production){
+    const char *delimiter = strstr(line, "->");
+    if (delimiter != NULL) {
+        strncpy(ruleIdentifier, line, delimiter - line);
+        ruleIdentifier[delimiter - line] = '\0';
+        strcpy(production, delimiter + 2);
+    }
+}
+
+
+Node* findNode(Node *head, const char *ruleIdentifier){
+    Node *current = *head;
+    while (current != NULL) {
+        if (strcmp(current->ruleIdentifier, ruleIdentifier) == 0) {
+            return current; 
+        }
+        current = current->next; 
+    } 
+    return NULL; 
+}
+
+void appendProduction(Node *node, const char *production){
+    size_t newSize = strlen(node->production) + strlen(production) + 4;
+    node->production = (char *)realloc(node->production, newSize); 
+    strcat(node->production, " | ");
+    strcat(node->production, production);
+}
+
+void appendOrUpdateNode(Node **head, const char *ruleIdentifier, const char *production){
+    Node *existingNode = findNode(*head, ruleIdentifier);
+    if (existingNode != NULL) {
+        appendProduction(existingNode, production);
+    } else {
+        Node *newNode = createNode(ruleIdentifier, production);
+        if (*head == NULL){
+            *head = newNode; 
+        } else {
+            Node *temp = *head; 
+            while (temp->next != NULL) {
+                temp = temp->next;
+            }
+            temp->next = newNode; 
+        }
     }
 }
