@@ -6,10 +6,11 @@ int main() {
 
     if (grammar == NULL) {
         perror("Error opening the file");
-        return EXIT_FAILURE;
+        return 1;
     }
 
     Node *head = createLinkedList(grammar);
+    
     fclose(grammar);
 
     // Output the contents of the linked list
@@ -18,7 +19,7 @@ int main() {
     // Free the linked list
     freeLinkedList(head);
 
-    return EXIT_SUCCESS;
+    return 0;
 }
 
 // Function to create a new node
@@ -81,7 +82,7 @@ void printList(Node *head) {
     Node *current = head;
 
     while (current != NULL) {
-        printf("Rule: %s -> %s\n", current->ruleIdentifier, current->production);
+        printf("%s -> %s\n", current->ruleIdentifier, current->production);
         current = current->next;
     }
 }
