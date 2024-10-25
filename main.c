@@ -1,7 +1,6 @@
 #include "main.h"
 
 int main() {
-    
     FILE *grammar = fopen("gramatica1.txt", "r");
 
     if (grammar == NULL) {
@@ -17,7 +16,7 @@ int main() {
     printList(head);
 
     // Free the linked list
-    freeLinkedList(head);
+    freeLinkedList(head);    
 
     return 0;
 }
