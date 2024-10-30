@@ -131,3 +131,4 @@ void appendOrUpdateNode(Node **head, const char *ruleIdentifier, const char *pro
         }
     }
 }
+
