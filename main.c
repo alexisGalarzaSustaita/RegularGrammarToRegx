@@ -12,16 +12,20 @@ int main() {
     
     fclose(grammar);
 
-    // Output the contents of the linked list
+    eliminateSpacesAndPipes(head);
+    eliminateAndGroupRuleIdentifier(head);
+    //addBracesToNonTerminals(head);
+    //integrateProductions(head);
+   
     printList(head);
 
-    // Free the linked list
+   
     freeLinkedList(head);    
 
     return 0;
 }
 
-// Function to create a new node
+
 Node *createNode(const char *ruleIdentifier, const char *production) {
     Node *newNode = (Node *)malloc(sizeof(Node));
     newNode->ruleIdentifier = strdup(ruleIdentifier);
@@ -30,7 +34,7 @@ Node *createNode(const char *ruleIdentifier, const char *production) {
     return newNode;
 }
 
-// Function to append a node to the list
+
 void appendNode(Node **head, const char *ruleIdentifier, const char *production) {
     Node *newNode = createNode(ruleIdentifier, production);
 
@@ -45,7 +49,7 @@ void appendNode(Node **head, const char *ruleIdentifier, const char *production)
     }
 }
 
-// Function to free the linked list
+
 void freeLinkedList(Node *head) {
     Node *current = head;
     Node *next;
@@ -59,7 +63,7 @@ void freeLinkedList(Node *head) {
     }
 }
 
-// Function to create a linked list from the file
+
 Node* createLinkedList(FILE *file) {
     Node *head = NULL; 
     char line[MAX_LINE_LENGTH];
@@ -76,7 +80,7 @@ Node* createLinkedList(FILE *file) {
     return head;
 }
 
-// Function to print the linked list
+
 void printList(Node *head) {
     Node *current = head;
 
@@ -132,3 +136,111 @@ void appendOrUpdateNode(Node **head, const char *ruleIdentifier, const char *pro
     }
 }
 
+
+
+
+void eliminateSpacesAndPipes(Node *head) {
+    Node *current = head;
+    while (current != NULL) {
+        char *production = current->production;
+        char *newProduction = (char *)malloc(strlen(production) + 1);
+        int count1 = 0, count2 = 0;
+
+        while (production[count1] != '\0') {
+            if (!(production[count1] == ' ' && (count1 == 0 || production[count1 - 1] == ' ' || production[count1 + 1] == ' '))) {
+                newProduction[count2++] = production[count1];
+            }
+            count1++;
+        }
+        newProduction[count2] = '\0';
+        strcpy(current->production, newProduction);
+        free(newProduction);
+        current = current->next;
+    }
+}
+
+
+void eliminateAndGroupRuleIdentifier(Node *head) {
+    Node *current = head;
+    while (current != NULL) {
+        char *production = current->production;
+        char *newProduction = (char *)malloc(strlen(production) * 2);
+        int i = 0, j = 0;
+        while (production[i] != '\0') {
+            if (production[i] == current->ruleIdentifier[0]) {
+                newProduction[j++] = '(';
+                newProduction[j++] = production[i];
+                newProduction[j++] = '|';
+                i++;
+                while (production[i] != '\0' && production[i] != '|') {
+                    newProduction[j++] = production[i++];
+                }
+                newProduction[j++] = ')';
+            } else {
+                newProduction[j++] = production[i++];
+            }
+        }
+        newProduction[j] = '\0';
+        strcpy(current->production, newProduction);
+        free(newProduction);
+        current = current->next;
+    }
+}
+
+
+void addBracesToNonTerminals(Node *head) {
+    Node *current = head;
+    while (current != NULL) {
+        char *production = current->production;
+        char *newProduction = (char *)malloc(strlen(production) * 2);
+        int i = 0, j = 0;
+        
+        while (production[i] != '\0') {
+            if (isalpha(production[i])) {
+                newProduction[j++] = '{';
+                while (isalpha(production[i])) {
+                    newProduction[j++] = production[i++];
+                }
+                newProduction[j++] = '}';
+            } else {
+                newProduction[j++] = production[i++];
+            }
+        }
+
+        newProduction[j] = '\0';
+        strcpy(current->production, newProduction);
+        free(newProduction);
+        current = current->next;
+    }
+}
+
+
+void integrateProductionsRecursive(Node *current, Node *head) {
+    if (current == NULL) {
+        return;
+    }
+
+    char *production = current->production;
+    char integratedProduction[1000];
+    strcpy(integratedProduction, production);
+
+    Node *temp = head;
+    while (temp != NULL) {
+        if (temp != current && strstr(production, temp->ruleIdentifier) != NULL) {
+            
+            char *insertionPoint = strstr(integratedProduction, temp->ruleIdentifier);
+
+            
+            strcat(insertionPoint, " | ");
+            strcat(insertionPoint, temp->production);
+        }
+        temp = temp->next;
+    }
+
+    strcpy(current->production, integratedProduction);
+    integrateProductionsRecursive(current->next, head);
+}
+
+void integrateProductions(Node *head) {
+    integrateProductionsRecursive(head, head);
+}
